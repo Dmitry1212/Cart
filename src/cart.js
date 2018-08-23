@@ -1,4 +1,7 @@
-var Cart = {
+'use strict';
+
+let Cart = {
+
     renderGoodsList() {
         $('#goods').empty();
         $.get('http://localhost:3000/goods', {}, function (goods) {
@@ -55,7 +58,7 @@ var Cart = {
             $('#cart').append($('<div />', {text: 'Total: ' + total + ' rub.'}))
         }, 'json');
     },
-    deleteItem(item, event) {
+    deleteItem(item) {
         $.ajax({
             type: 'DELETE',
             url: 'http://localhost:3000/cart/' + $(item).attr('data-id'),
@@ -64,7 +67,7 @@ var Cart = {
             }
         })
     },
-    minusItem(item, event) {
+    minusItem(item) {
         var minus = $(item).prev();
         if (minus.attr('data-quantity') !== '1') {
             $.ajax({
@@ -85,7 +88,8 @@ var Cart = {
             })
         }
     },
-    addGood(item, event) {
+    addGood(item) {
+        console.log(this);
         var good = {
             id: $(item).attr('data-id'),
             price: $(item).attr('data-price'),
@@ -113,6 +117,9 @@ var Cart = {
                 }
             });
         }
+    },
+    sum (a,b){
+        return a+b;
     }
 };
 
@@ -121,20 +128,21 @@ var Cart = {
     $(document).ready(function () {
         $('.slider').bxSlider();
 
+        //let cart = new Cart;
+
         Cart.renderGoodsList();
         Cart.renderCart();
 
         $('#cart').on('click', 'li button.remove', function (event) {
-            Cart.deleteItem(this, event);
+            Cart.deleteItem(this);
         });
 
-
         $('#cart').on('click', 'li button.minus', function (event) {
-            Cart.minusItem(this, event);
+            Cart.minusItem(this);
         });
 
         $('#goods').on('click', 'li button', function ( event) {
-            Cart.addGood(this, event);
+            Cart.addGood(this);
             event.preventDefault();
         })
     });
